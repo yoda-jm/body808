@@ -1,0 +1,33 @@
+body808: one piezo hit through the protection board, interactive
+* ngspice sim/hit.cir   (run from the repository root)
+* Change the force amplitude in BF (negative = hit of the other polarity), the
+* pulse length (0.2m .. 3m) or the disc's Q, then type `source sim/hit.cir`.
+.include sim/body808.lib
+
+VCC vcc 0 5
+* force: half-sine, 1 ms long, starting at 1 ms. 230 gives ~20 V across the disc.
+BF force 0 V = 230 * ((time > 1m && time < 2m) ? sin(3.14159265*(time-1m)/1m) : 0)
+
+* reference: disc + cable + R1 only, what a scope on the jack would show
+XPR ref 0 force PIEZO Q=30
+CCR ref 0 0.3n
+R1R ref 0 1Meg
+
+* the real board
+XPB tip 0 force PIEZO Q=30
+CCB tip 0 0.3n
+R1 tip 0 1Meg
+R2 tip mid 10k
+DZ 0 mid 1N4733A
+R3 mid pin 1k
+XPIN pin vcc 0 AVRPIN
+
+.tran 2u 60m 0 2u
+.control
+set nomoremode
+run
+plot v(ref) title 'across the disc (R1 only)' xlabel 's' ylabel 'V'
+plot v(tip) v(pin) title 'board: jack tip and analog pin' xlabel 's' ylabel 'V'
+plot v.xpin.viclo#branch v.xpin.vichi#branch title 'pin clamp diode currents' ylabel 'A'
+.endc
+.end

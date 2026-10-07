@@ -1,0 +1,46 @@
+* body808 models: piezo disc, 1N4733A and BZX55C5V1 zeners, ATmega2560 analog pin.
+* See sim/README.md for where the values come from.
+
+* --- 27 mm piezo disc, Butterworth-Van Dyke model ---------------------------
+* red black: the disc's leads. force: hit force as a voltage (1 V = 1 unit),
+* drives the motional branch, so the ringing comes out of the model itself.
+* C0 static capacitance (datasheets: 16-20 nF, +-30 %), CM motional
+* capacitance (~C0/10 for buzzer discs), F mechanical resonance, Q quality
+* factor (bare disc ~90, glued to a plate and padded: lower).
+.subckt PIEZO red black force C0=20n CM=2n F=4.6k Q=30
+.param LM={1/((6.283185307*F)**2*CM)}
+.param RM={sqrt(LM/CM)/Q}
+C0 red black {C0}
+RM red m1 {RM}
+LM m1 m2 {LM}
+CM m2 m3 {CM}
+EF m3 black force 0 1
+.ends PIEZO
+
+* --- 1N4733A zener, 5.1 V 1 W (the 1N4728A-1N4756A kit) ---------------------
+* Fitted to the datasheet: Vz 5.1 V at Izt 49 mA, Zzt <= 7 ohm, Zzk <= 550 ohm
+* at 1 mA, IR <= 10 uA at 1 V. The low-current knee is a typical
+* guess (NBV sets its slope), ~4.7 V at 1 mA and ~4.3 V at 10 uA: measure
+* yours, see sim/README.md.
+.model 1N4733A D(IS=1e-14 N=1 BV=4.98 IBV=49m NBV=3 RS=2.5 CJO=200p M=0.33 VJ=0.75)
+
+* --- BZX55C5V1 zener, 5.1 V 0.5 W (DO-35) ------------------------------------
+* Same junction as the 1N4733A on a ~10x smaller die: currents / 10, RS x 10.
+* Gives the datasheet's Vz 5.1 V at Izt 5 mA (4.8-5.4 V), Zzt ~41 ohm (max 60).
+.model BZX55C5V1 D(IS=1e-15 N=1 BV=4.98 IBV=4.9m NBV=3 RS=25 CJO=60p M=0.33 VJ=0.75)
+
+* --- ATmega2560 analog input pin ------------------------------------------------
+* pin vcc gnd. Clamp diodes to VCC and GND (conduct at ~0.6 V past the rails),
+* ~10 pF pin capacitance, ADC sample-and-hold: 14 pF behind ~1 kohm (datasheet
+* figure "Analog Input Circuitry"). ICLO / ICHI: 0 V sources that measure the
+* clamp diode currents, read as v.<instance>.viclo#branch / ...vichi#branch.
+.subckt AVRPIN pin vcc gnd
+VICLO gnd lo 0
+DLO lo pin DCLAMP
+VICHI hi vcc 0
+DHI pin hi DCLAMP
+CPIN pin gnd 10p
+RSH pin sh 1k
+CSH sh gnd 14p
+.model DCLAMP D(IS=1e-14 N=1 RS=20)
+.ends AVRPIN

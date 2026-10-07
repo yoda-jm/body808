@@ -37,6 +37,9 @@ Notes follow the General MIDI drum map, so any drum sampler works out of the box
 - [docs/firmware.md](docs/firmware.md): output modes, pad settings, calibration, tuning
 - [docs/sampler.md](docs/sampler.md): getting MIDI into the PC, Hydrogen setup, making
   the beatbox kit, latency
+- [docs/simulation.md](docs/simulation.md): simulated hits through 7 board
+  configurations (schematics, waveforms, detection), with pros and cons of each
+- [sim/README.md](sim/README.md): the simulation's models, sources and how to run it
 
 ## Quick start
 
@@ -57,6 +60,7 @@ Notes follow the General MIDI drum map, so any drum sampler works out of the box
 body808.ino                    firmware (Arduino Mega 2560)
 tools/serial_midi_bridge.py    USB/radio serial port -> ALSA MIDI port
 tools/make_hydrogen_kit.py     samples/ folder -> Hydrogen drumkit
+sim/                           ngspice models and sweeps of the protection circuit
 docs/                          documentation and schematics (SVG)
 attic/                         the original Blink/MIDI test sketch
 ```

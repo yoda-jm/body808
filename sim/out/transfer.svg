@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" width="720" height="360" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+<rect width="720" height="360" fill="#fcfcfb"/>
+<text x="70" y="38" font-size="13" font-weight="600" fill="#1f1f1e">ADC reading vs piezo peak</text>
+<line x1="70" x2="690" y1="310.0" y2="310.0" stroke="#e4e3dc"/>
+<text x="64" y="314.0" font-size="11" fill="#62615a" text-anchor="end">0</text>
+<line x1="70" x2="690" y1="249.5" y2="249.5" stroke="#e4e3dc"/>
+<text x="64" y="253.5" font-size="11" fill="#62615a" text-anchor="end">256</text>
+<line x1="70" x2="690" y1="189.0" y2="189.0" stroke="#e4e3dc"/>
+<text x="64" y="193.0" font-size="11" fill="#62615a" text-anchor="end">512</text>
+<line x1="70" x2="690" y1="128.5" y2="128.5" stroke="#e4e3dc"/>
+<text x="64" y="132.5" font-size="11" fill="#62615a" text-anchor="end">768</text>
+<line x1="70" x2="690" y1="68.2" y2="68.2" stroke="#e4e3dc"/>
+<text x="64" y="72.2" font-size="11" fill="#62615a" text-anchor="end">1023</text>
+<text x="70.0" y="326" font-size="11" fill="#62615a" text-anchor="middle">0.2</text>
+<text x="161.4" y="326" font-size="11" fill="#62615a" text-anchor="middle">0.5</text>
+<text x="230.6" y="326" font-size="11" fill="#62615a" text-anchor="middle">1</text>
+<text x="299.7" y="326" font-size="11" fill="#62615a" text-anchor="middle">2</text>
+<text x="391.1" y="326" font-size="11" fill="#62615a" text-anchor="middle">5</text>
+<text x="460.3" y="326" font-size="11" fill="#62615a" text-anchor="middle">10</text>
+<text x="529.4" y="326" font-size="11" fill="#62615a" text-anchor="middle">20</text>
+<text x="620.8" y="326" font-size="11" fill="#62615a" text-anchor="middle">50</text>
+<text x="690.0" y="326" font-size="11" fill="#62615a" text-anchor="middle">100</text>
+<text x="30" y="180.0" font-size="11" fill="#62615a" text-anchor="middle" transform="rotate(-90 30 180.0)">ADC counts</text>
+<text x="380.0" y="344" font-size="11" fill="#62615a" text-anchor="middle">piezo peak voltage (log scale)</text>
+<line x1="70" x2="690" y1="300.5" y2="300.5" stroke="#62615a" stroke-dasharray="4 3"/>
+<text x="686" y="296.5" font-size="10" fill="#62615a" text-anchor="end">threshold</text>
+<line x1="70" x2="690" y1="168.2" y2="168.2" stroke="#62615a" stroke-dasharray="4 3"/>
+<text x="686" y="164.2" font-size="10" fill="#62615a" text-anchor="end">maxLevel (velocity 127)</text>
+<line x1="70" x2="690" y1="310" y2="310" stroke="#62615a"/>
+<polyline points="70.0,300.3 110.5,295.6 161.4,286.1 195.0,276.4 230.6,262.0 271.0,238.1 299.7,214.0 340.2,166.1 368.9,118.1 391.1,96.1 409.3,92.5 438.0,89.5 460.3,87.8 500.7,85.9 529.4,84.5 569.9,82.6 620.8,80.5 690.0,77.4" fill="none" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="70.0,300.3 110.5,295.6 161.4,285.9 195.0,276.2 230.6,261.5 271.0,237.4 299.7,213.3 340.2,164.9 368.9,116.7 391.1,68.2 409.3,68.2 438.0,68.2 460.3,68.2 500.7,68.2 529.4,68.2 569.9,68.2 620.8,68.2 690.0,68.2" fill="none" stroke="#eb6834" stroke-width="2" stroke-linejoin="round"/>
+<line x1="518" x2="534" y1="34" y2="34" stroke="#eb6834" stroke-width="2"/>
+<text x="540" y="38" font-size="11" fill="#1f1f1e">perfectly linear</text>
+<line x1="409" x2="425" y1="34" y2="34" stroke="#2a78d6" stroke-width="2"/>
+<text x="431" y="38" font-size="11" fill="#1f1f1e">simulated</text>
+</svg>
