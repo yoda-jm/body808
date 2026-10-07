@@ -64,12 +64,12 @@
       <rect x="250" y="425" width="150" height="50" rx="6"/>
     </g>
     <g fill="#2a5f9e" font-size="12" text-anchor="middle">
-      <text x="325" y="97">protection</text><text x="325" y="113">1M · 10k · 5V1 · 1k</text>
-      <text x="325" y="167">protection</text><text x="325" y="183">1M · 10k · 5V1 · 1k</text>
-      <text x="325" y="237">protection</text><text x="325" y="253">1M · 10k · 5V1 · 1k</text>
-      <text x="325" y="307">protection</text><text x="325" y="323">1M · 10k · 5V1 · 1k</text>
-      <text x="325" y="377">protection</text><text x="325" y="393">1M · 10k · 5V1 · 1k</text>
-      <text x="325" y="447">protection</text><text x="325" y="463">1M · 10k · 5V1 · 1k</text>
+      <text x="325" y="97">zener protection</text><text x="325" y="113">1M · 10k · 5V1 · 1k</text>
+      <text x="325" y="167">zener protection</text><text x="325" y="183">1M · 10k · 5V1 · 1k</text>
+      <text x="325" y="237">zener protection</text><text x="325" y="253">1M · 10k · 5V1 · 1k</text>
+      <text x="325" y="307">zener protection</text><text x="325" y="323">1M · 10k · 5V1 · 1k</text>
+      <text x="325" y="377">zener protection</text><text x="325" y="393">1M · 10k · 5V1 · 1k</text>
+      <text x="325" y="447">zener protection</text><text x="325" y="463">1M · 10k · 5V1 · 1k</text>
     </g>
     <text x="205" y="88" font-size="11" fill="#555">jack</text>
     <text x="20" y="500" font-size="12" fill="#555">Placement is free: plug each pad into the sound you want.</text>

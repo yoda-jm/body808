@@ -63,6 +63,8 @@ substitute: they conduct at 0.6–0.7 V, like the zener, so they'd still need R3
 
 ## Bill of materials
 
+Shopping links and what to check for each part: [parts.md](parts.md).
+
 Per pad (×6):
 
 | Qty | Part |
@@ -112,6 +114,8 @@ Then connect the board, power the Mega from USB, start with `CALIBRATE 1` and
 **tap softly first**.
 
 ## The pads
+
+![Pad mounting](pad-mounting.svg)
 
 The pads use **27 mm piezo discs** (brass disc with a ~20 mm ceramic layer, leads
 pre-soldered, like the Timesetl packs). That's the common size for DIY drum
@@ -193,11 +197,32 @@ Test each pad on the bench (`CALIBRATE 1`, tap with a finger) before you wear it
 ## Cables and connectors
 
 - 3.5 mm mono jacks make the pads detachable and replaceable. Tip = piezo red,
-  sleeve = piezo black = GND.
+  sleeve = piezo black = GND. A stereo plug in a mono socket also works (ring and
+  sleeve are joined).
+- The easiest cable: buy cheap 1.5–2 m male-male 3.5 mm audio cables and **cut each
+  in half**: two pad cables, each with a moulded plug already on. Find the core
+  (tip) and the shield (sleeve) with the multimeter.
 - Plugging a jack in briefly shorts tip and sleeve. That's harmless here thanks to R2.
-- Use shielded cable, or at least twist the signal and GND wires together. Long
-  untwisted wires on the body pick up hum and pick up crosstalk from each other.
-- Bundle the 6 cables along the body to the Mega (in a belt bag or on the back).
+- Bundle the 6 cables along the body to the Mega (belt bag or on the back) with
+  Velcro ties, leaving slack at the joints (knees, elbows, shoulders).
+
+### Is there signal loss in the cable?
+
+No, not at these lengths. A piezo behaves like a voltage source behind a
+capacitor: a 27 mm disc is roughly **20 nF**. The cable adds its own capacitance
+in parallel, about **100–200 pF per metre** for thin shielded audio cable. With 2 m
+of cable that's ~0.3 nF against the piezo's 20 nF, a voltage loss of about
+**1–2 %**. The copper's resistance (well under 1 Ω) is nothing next to the 1 MΩ
+load. Even 5 m would lose under 5 %, which calibration absorbs.
+
+What actually matters with cables on a moving body:
+
+| Problem | Cause | Fix |
+|---------|-------|-----|
+| Hum, random small triggers | The input is high impedance (1 MΩ), so unshielded wires pick up 50 Hz mains hum and noise from nearby electronics | Shielded cable, shield to GND. Twisted pair is a second best. |
+| Crosstalk between pads | Six signal wires running side by side couple fast spikes into each other | One shielded cable per pad (not a multi-core cable with one shared shield) |
+| Crackles when moving | Flexing cable generates tiny charges (triboelectric noise), loose jack contacts | Firmware threshold is far above it (millivolts vs 0.2 V); use metal jacks that grip, strain-relieve both ends |
+| Broken wire | Pulled at the solder joints | Hot glue strain relief on the pad, cable taped to the strap, slack at the joints |
 
 ## Power and electrical safety
 

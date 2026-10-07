@@ -33,6 +33,7 @@ Notes follow the General MIDI drum map, so any drum sampler works out of the box
 
 - [docs/hardware.md](docs/hardware.md): protection circuit, parts list, building and
   testing the board, making the pads, power and safety, MIDI DIN out
+- [docs/parts.md](docs/parts.md): shopping list with links (amazon.fr searches)
 - [docs/firmware.md](docs/firmware.md): output modes, pad settings, calibration, tuning
 - [docs/sampler.md](docs/sampler.md): getting MIDI into the PC, Hydrogen setup, making
   the beatbox kit, latency
