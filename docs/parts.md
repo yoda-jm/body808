@@ -24,6 +24,7 @@ seller from the results and check the specs given in the "What to check" column.
 | DIN-5 female socket, panel mount | 1 | 5 pins at 180° (MIDI) | [search](https://www.amazon.fr/s?k=prise+DIN+5+broches+femelle+chassis+MIDI) |
 | 9 V battery clip with 5.5 × 2.1 mm barrel plug | 1 | fits the Mega's power jack | [search](https://www.amazon.fr/s?k=clip+pile+9V+jack+5.5x2.1) |
 | or: small USB power bank | 1 | simpler, lasts longer than a 9 V battery | [search](https://www.amazon.fr/s?k=batterie+externe+usb+mini) |
+| Potentiometer 10 kΩ linear (B10K) + knob | 1 | optional sensitivity knob; panel mount with a nut | [search](https://www.amazon.fr/s?k=potentiometre+B10K+lineaire+bouton) |
 | Hookup wire (22–24 AWG) | 1 set | for the protection board | [search](https://www.amazon.fr/s?k=fil+electrique+22awg+kit) |
 | Heat-shrink tubing kit | 1 | | [search](https://www.amazon.fr/s?k=gaine+thermoretractable+kit) |
 | Multimeter with diode test | 1 | to check the board before connecting it | [search](https://www.amazon.fr/s?k=multimetre+numerique+test+diode) |

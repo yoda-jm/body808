@@ -34,6 +34,30 @@ can't be combined. The sketch refuses to compile if you try.
 Streams the peak of each pad every 10 ms to **Tools → Serial Plotter** (115200),
 one line per pad. No MIDI is sent in this mode.
 
+### Sensitivity knob (optional)
+
+```cpp
+#define SENSITIVITY_KNOB 1
+const uint8_t SENSITIVITY_PIN = A6;
+```
+
+A 10 kΩ potentiometer on A6 (wiring in [hardware.md](hardware.md#sensitivity-knob-optional))
+scales the `threshold` and `maxLevel` of **all** pads together, to adapt live to a
+softer or harder playing style, or a noisier stage, without reflashing:
+
+| Knob | Effect | kick threshold / maxLevel (40 / 600 configured) |
+|------|--------|------------------------------------------------|
+| fully left | half as sensitive (× 2) | 80 / 1023 |
+| middle | as calibrated | 40 / 600 |
+| fully right | twice as sensitive (× 0.5) | 20 / 300 |
+
+Calibrate with the knob in the middle. It's read every 20 ms; in `MIDI_MODE_DISPLAY`
+the Serial Monitor shows `sensitivity: 141%` when it moves. Leave
+`SENSITIVITY_KNOB 0` when no knob is wired: an unconnected pin reads random values.
+
+The knob only changes **when a hit triggers** and how velocity is scaled. **How loud**
+each sound plays is set in the sampler (Hydrogen mixer and instrument volumes).
+
 ### Pads
 
 ```cpp

@@ -37,6 +37,13 @@
 
 #define CALIBRATE 0
 
+// Optional global sensitivity knob: a 10k potentiometer between 5V and GND,
+// wiper on SENSITIVITY_PIN. Middle = thresholds as configured, left = half as
+// sensitive, right = twice as sensitive. Keep it at 0 when no knob is wired:
+// an unconnected pin reads noise and the sensitivity would jump around.
+#define SENSITIVITY_KNOB 0
+const uint8_t SENSITIVITY_PIN = A6;
+
 #if (MIDI_MODE & MIDI_MODE_DISPLAY) && (MIDI_MODE & MIDI_MODE_USB_SERIAL)
 #error "MIDI_MODE_DISPLAY and MIDI_MODE_USB_SERIAL both use the USB serial port"
 #endif
@@ -96,6 +103,19 @@ Pad pads[] = {
 };
 const uint8_t PAD_COUNT = sizeof(pads) / sizeof(pads[0]);
 
+// Multiplies every pad's threshold and maxLevel: 0.5 = twice as sensitive,
+// 2 = half as sensitive. Set by the sensitivity knob, 1 without it.
+float levelScale = 1.0;
+
+int padThreshold(const Pad &pad) {
+  return (int)(pad.threshold * levelScale);
+}
+
+int padMaxLevel(const Pad &pad) {
+  int threshold = padThreshold(pad);
+  return constrain((int)(pad.maxLevel * levelScale), threshold + 1, 1023);
+}
+
 void midiSend(uint8_t status, uint8_t data1, uint8_t data2) {
   if (MIDI_MODE & MIDI_MODE_SERIAL) {
     Serial1.write(status);
@@ -127,7 +147,8 @@ void writeMidiNote(MidiCommand command, const Pad &pad, uint8_t velocity) {
 }
 
 uint8_t peakToVelocity(const Pad &pad, int peak) {
-  float x = float(peak - pad.threshold) / float(pad.maxLevel - pad.threshold);
+  int threshold = padThreshold(pad);
+  float x = float(peak - threshold) / float(padMaxLevel(pad) - threshold);
   x = constrain(x, 0.0, 1.0);
   return 1 + (uint8_t)(pow(x, VELOCITY_CURVE) * 126.0 + 0.5);
 }
@@ -144,10 +165,31 @@ int readPiezo(uint8_t pin) {
 // doesn't retrigger it, then decays back to the configured value.
 int currentThreshold(const Pad &pad, unsigned long now) {
   unsigned long since = now - pad.lastHit;
-  if (pad.lastPeak == 0 || since >= MASK_US + DECAY_US) return pad.threshold;
+  int threshold = padThreshold(pad);
+  if (pad.lastPeak == 0 || since >= MASK_US + DECAY_US) return threshold;
   float left = 1.0 - float(since - MASK_US) / float(DECAY_US);
   int dynamic = (int)(pad.lastPeak * RETRIGGER_RATIO * left);
-  return max(pad.threshold, dynamic);
+  return max(threshold, dynamic);
+}
+
+// Read the knob every 20 ms. Small changes are ignored so the value doesn't
+// flicker between two steps.
+void updateSensitivity() {
+  static unsigned long lastRead = 0;
+  static int lastValue = -100;
+  if (millis() - lastRead < 20) return;
+  lastRead = millis();
+
+  int value = readPiezo(SENSITIVITY_PIN);
+  if (abs(value - lastValue) < 8) return;
+  lastValue = value;
+  levelScale = pow(2.0, (512 - value) / 512.0);
+
+  if (MIDI_MODE & MIDI_MODE_DISPLAY) {
+    Serial.print(F("sensitivity: "));
+    Serial.print((int)(100.0 / levelScale + 0.5));
+    Serial.println('%');
+  }
 }
 
 // A hit on one pad shakes the body and shows up, weaker, on the others.
@@ -242,6 +284,8 @@ void loop() {
 }
 #else
 void loop() {
+  if (SENSITIVITY_KNOB) updateSensitivity();
+
   bool anyActive = false;
   for (uint8_t i = 0; i < PAD_COUNT; i++) {
     int value = readPiezo(pads[i].pin);

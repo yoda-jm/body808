@@ -236,6 +236,22 @@ What actually matters with cables on a moving body:
   the foam anyway, and the circuit only carries 5 V.
 - Unused analog pins (A6–A15) can be left unconnected.
 
+## Sensitivity knob (optional)
+
+A 10 kΩ linear potentiometer (marked `B10K`) lets you change the sensitivity of all
+pads live. It is **not** in the piezo path, so it needs no protection:
+
+| Pot pin | Connect to |
+|---------|------------|
+| left end | Mega GND |
+| middle (wiper) | Mega A6 |
+| right end | Mega 5V |
+
+Then set `SENSITIVITY_KNOB 1` in the firmware ([firmware.md](firmware.md#sensitivity-knob-optional)).
+Mount it on the belt bag where you can reach it, with a knob that doesn't turn too
+easily. Don't put potentiometers in the piezo path to adjust single pads: the
+per-pad `threshold`/`maxLevel` in the firmware does that without moving parts.
+
 ## Radio: MIDI out (DIN-5) + CME WIDI Master
 
 The radio link is a **CME WIDI Master**, a Bluetooth (BLE) MIDI adapter that plugs
