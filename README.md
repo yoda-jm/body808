@@ -5,8 +5,8 @@ body hits into MIDI drum notes, sent by radio to a sampler that plays beatbox
 sounds.
 
 ```
-piezo pads ──> protection board ──> Arduino Mega ──> MIDI ──> radio ──> PC ──> Hydrogen (beatbox kit)
-(on the body)   (keeps the Mega alive)  (hit detection)      (or USB cable for testing)
+piezo pads ──> protection board ──> Arduino Mega ──> MIDI OUT ──> WIDI Master ~~BLE~~> PC ──> Hydrogen (beatbox kit)
+(on the body)   (keeps the Mega alive)  (hit detection)   (DIN-5)    (Bluetooth MIDI)        (or USB cable for testing)
 ```
 
 Each input plays one fixed sound. Where a pad goes on the body is up to you: plug
@@ -47,7 +47,8 @@ Notes follow the General MIDI drum map, so any drum sampler works out of the box
 4. Switch to `MIDI_MODE_USB_SERIAL`, run the bridge, play GMRockKit in Hydrogen
    ([sampler.md](docs/sampler.md)).
 5. Record beatbox samples, build the kit with `tools/make_hydrogen_kit.py`.
-6. Switch to `MIDI_MODE_SERIAL`, plug in the radio, run on battery.
+6. Switch to `MIDI_MODE_SERIAL`, plug the WIDI Master into the MIDI OUT socket, pair it
+   with the PC ([sampler.md](docs/sampler.md#radio-cme-widi-master)), run on battery.
 
 ## Files
 

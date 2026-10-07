@@ -5,9 +5,48 @@
 | Path | Firmware mode | On the PC |
 |------|---------------|-----------|
 | USB cable (testing) | `MIDI_MODE_USB_SERIAL` | `tools/serial_midi_bridge.py /dev/ttyACM0` |
-| Radio receiver with USB-MIDI | `MIDI_MODE_SERIAL` | Appears directly as a MIDI device (`aconnect -l`) |
-| Radio receiver as a USB serial port | `MIDI_MODE_SERIAL` | `tools/serial_midi_bridge.py /dev/ttyUSB0 --baud <receiver baud>` |
-| Radio receiver with DIN out | `MIDI_MODE_SERIAL` | Any USB-MIDI interface |
+| WIDI Master → PC Bluetooth | `MIDI_MODE_SERIAL` | BlueZ with MIDI support, see below |
+| WIDI Master → CME USB receiver | `MIDI_MODE_SERIAL` | Plug-and-play USB MIDI device |
+
+## Radio: CME WIDI Master
+
+The WIDI Master on the Mega's MIDI OUT sends Bluetooth LE MIDI. The PC needs
+something that receives it. Two options:
+
+### Option A: the PC's own Bluetooth (BlueZ)
+
+No extra hardware, but BlueZ must be built with MIDI support. On Gentoo:
+
+```sh
+# as root
+echo "net-wireless/bluez midi" >> /etc/portage/package.use
+emerge --oneshot --ask net-wireless/bluez
+systemctl restart bluetooth
+```
+
+Then, with the Mega powered and the WIDI LED slowly flashing blue:
+
+```sh
+bluetoothctl
+  scan on              # wait for "WIDI Master" to appear, note its address
+  scan off
+  pair   XX:XX:XX:XX:XX:XX
+  trust  XX:XX:XX:XX:XX:XX   # reconnects automatically next time
+  connect XX:XX:XX:XX:XX:XX
+  quit
+aconnect -l            # a "WIDI Master" MIDI client should be listed
+```
+
+Select it as the MIDI input in Hydrogen. Latency depends on the PC's Bluetooth
+chip and the BLE connection interval, typically 7.5–15 ms on top of the rest.
+
+### Option B: a CME USB receiver (WIDI Bud Pro or WIDI Uhost)
+
+A second CME device plugged into the PC pairs automatically with the WIDI Master
+(WIDI to WIDI) and shows up as a normal USB MIDI device: no BlueZ setup, and usually
+lower and steadier latency than a PC Bluetooth chip. Recommended if option A is
+unreliable or too slow. Use the WIDI app to put both in the same "group" if other
+WIDI devices are around.
 
 ### Serial bridge
 

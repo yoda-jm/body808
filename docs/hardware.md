@@ -63,7 +63,8 @@ Shared:
 |-----|------|
 | 1 | Arduino Mega 2560 |
 | 1 | Perfboard or a Mega proto shield for the protection board |
-| 1 | 5-pin DIN female socket + 2 × 220 Ω (MIDI out, if your radio takes DIN) |
+| 1 | 5-pin DIN female socket + 2 × 220 Ω (MIDI OUT for the WIDI Master) |
+| 1 | CME WIDI Master (Bluetooth MIDI radio, powered by the MIDI OUT) |
 | 1 | Power when worn: 9 V battery with a barrel plug, or a USB power bank |
 | | Velcro/elastic straps, a glove for the hand pads, an insole or ankle strap for the foot |
 
@@ -144,11 +145,14 @@ and the brass edge can cut. Make a sandwich instead:
   the foam anyway, and the circuit only carries 5 V.
 - Unused analog pins (A6–A15) can be left unconnected.
 
-## MIDI out (DIN-5) for the radio
+## Radio: MIDI out (DIN-5) + CME WIDI Master
+
+The radio link is a **CME WIDI Master**, a Bluetooth (BLE) MIDI adapter that plugs
+into a standard 5-pin DIN **MIDI OUT** socket. So the Mega only needs a normal MIDI
+OUT socket; no radio code, no extra library.
 
 In `MIDI_MODE_SERIAL` the Mega sends standard MIDI on **TX1 (pin 18)** at 31250 baud.
-For a DIN socket (seen from the back of a female socket, pins 1–5 are numbered
-1, 4, 2, 5, 3 left to right along the arc; check your socket's markings):
+Wire a female DIN-5 socket like this (the standard 5 V MIDI OUT circuit):
 
 | DIN pin | Connect to |
 |---------|------------|
@@ -157,6 +161,28 @@ For a DIN socket (seen from the back of a female socket, pins 1–5 are numbered
 | 2 | Mega GND (shield) |
 | 1, 3 | not connected |
 
-If the radio transmitter has a DIN plug, it plugs straight into this socket. If it
-takes a logic-level serial input instead (nRF24/HC-12 adapter, XBee…), wire TX1
-directly to its RX (check that it accepts 5 V logic) and GND to GND.
+Pins 1–5 are not in order around the arc (it goes 3, 5, 2, 4, 1 from one end):
+use the numbers molded on the socket, and check with a multimeter before plugging
+anything in.
+
+About the WIDI Master:
+
+- **Plug only the main adapter** (the one with the button and LED) into this MIDI OUT
+  socket. The sub adapter (MIDI IN) isn't needed: body808 only sends.
+- **It is powered by the MIDI OUT socket itself** (CME: 3.3–5 V from the MIDI OUT),
+  through pins 4 and 5. That's why the two 220 Ω resistors must be there and pin 4
+  must go to 5 V: a "data-only" MIDI out with pin 4 unconnected won't power it.
+  If the LED stays off, check pin 4 first.
+- **LED**: blue slow flashing = waiting for a connection, blue steady = connected,
+  blue fast flashing = MIDI going through. Each hit should flash it.
+- **Pairing is automatic** with another WIDI device or a Bluetooth MIDI host. See
+  [sampler.md](sampler.md#radio-cme-widi-master) for the PC side.
+- Don't press its button during normal use: holding it 3 s forces "peripheral" mode,
+  and on old firmware it can switch to a test mode. The WIDI app (iOS/Android) updates
+  the firmware and can rename the unit.
+- The WIDI Master sticks out of the DIN socket by a few centimetres. On the body, mount
+  the socket so the adapter is protected (inside the belt bag, pointing up) and can't be
+  knocked off by an arm swing.
+
+If you later use another radio with a logic-level serial input (nRF24/HC-12 adapter,
+XBee…), wire TX1 directly to its RX (check that it accepts 5 V logic) and GND to GND.
