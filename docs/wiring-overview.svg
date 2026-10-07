@@ -13,37 +13,28 @@
   </g>
   <!-- shared rails of the protection board -->
   <g stroke-width="3" fill="none">
-    <line x1="440" y1="70" x2="440" y2="455" stroke="#c62828"/>
-    <line x1="470" y1="70" x2="470" y2="580" stroke="#111"/>
-    <line x1="440" y1="70" x2="520" y2="70" stroke="#c62828"/>
+    <line x1="470" y1="85" x2="470" y2="580" stroke="#111"/>
     <line x1="470" y1="580" x2="520" y2="580" stroke="#111"/>
   </g>
-  <g stroke-width="2">
-    <line x1="400" y1="105" x2="440" y2="105" stroke="#c62828"/><line x1="400" y1="115" x2="470" y2="115" stroke="#111"/>
-    <line x1="400" y1="175" x2="440" y2="175" stroke="#c62828"/><line x1="400" y1="185" x2="470" y2="185" stroke="#111"/>
-    <line x1="400" y1="245" x2="440" y2="245" stroke="#c62828"/><line x1="400" y1="255" x2="470" y2="255" stroke="#111"/>
-    <line x1="400" y1="315" x2="440" y2="315" stroke="#c62828"/><line x1="400" y1="325" x2="470" y2="325" stroke="#111"/>
-    <line x1="400" y1="385" x2="440" y2="385" stroke="#c62828"/><line x1="400" y1="395" x2="470" y2="395" stroke="#111"/>
-    <line x1="400" y1="455" x2="440" y2="455" stroke="#c62828"/><line x1="400" y1="465" x2="470" y2="465" stroke="#111"/>
+  <g stroke-width="2"><line x1="400" y1="115" x2="470" y2="115" stroke="#111"/><line x1="400" y1="185" x2="470" y2="185" stroke="#111"/><line x1="400" y1="255" x2="470" y2="255" stroke="#111"/><line x1="400" y1="325" x2="470" y2="325" stroke="#111"/><line x1="400" y1="395" x2="470" y2="395" stroke="#111"/><line x1="400" y1="465" x2="470" y2="465" stroke="#111"/>
   </g>
-  <g fill="#c62828"><circle cx="440" cy="105" r="4"/><circle cx="440" cy="175" r="4"/><circle cx="440" cy="245" r="4"/><circle cx="440" cy="315" r="4"/><circle cx="440" cy="385" r="4"/><circle cx="440" cy="455" r="4"/></g>
   <g fill="#111"><circle cx="470" cy="115" r="4"/><circle cx="470" cy="185" r="4"/><circle cx="470" cy="255" r="4"/><circle cx="470" cy="325" r="4"/><circle cx="470" cy="395" r="4"/><circle cx="470" cy="465" r="4"/></g>
   <!-- signal crosses rails: draw hop marks -->
   <g fill="#fff" stroke="none">
-    <rect x="434" y="91" width="12" height="8"/><rect x="464" y="91" width="12" height="8"/>
-    <rect x="434" y="161" width="12" height="8"/><rect x="464" y="161" width="12" height="8"/>
-    <rect x="434" y="231" width="12" height="8"/><rect x="464" y="231" width="12" height="8"/>
-    <rect x="434" y="301" width="12" height="8"/><rect x="464" y="301" width="12" height="8"/>
-    <rect x="434" y="371" width="12" height="8"/><rect x="464" y="371" width="12" height="8"/>
-    <rect x="434" y="441" width="12" height="8"/><rect x="464" y="441" width="12" height="8"/>
+    <rect x="464" y="91" width="12" height="8"/>
+    <rect x="464" y="161" width="12" height="8"/>
+    <rect x="464" y="231" width="12" height="8"/>
+    <rect x="464" y="301" width="12" height="8"/>
+    <rect x="464" y="371" width="12" height="8"/>
+    <rect x="464" y="441" width="12" height="8"/>
   </g>
   <g stroke="#111" stroke-width="2" fill="none">
-    <path d="M432 95 q8 -12 16 0"/><path d="M462 95 q8 -12 16 0"/>
-    <path d="M432 165 q8 -12 16 0"/><path d="M462 165 q8 -12 16 0"/>
-    <path d="M432 235 q8 -12 16 0"/><path d="M462 235 q8 -12 16 0"/>
-    <path d="M432 305 q8 -12 16 0"/><path d="M462 305 q8 -12 16 0"/>
-    <path d="M432 375 q8 -12 16 0"/><path d="M462 375 q8 -12 16 0"/>
-    <path d="M432 445 q8 -12 16 0"/><path d="M462 445 q8 -12 16 0"/>
+    <path d="M462 95 q8 -12 16 0"/>
+    <path d="M462 165 q8 -12 16 0"/>
+    <path d="M462 235 q8 -12 16 0"/>
+    <path d="M462 305 q8 -12 16 0"/>
+    <path d="M462 375 q8 -12 16 0"/>
+    <path d="M462 445 q8 -12 16 0"/>
   </g>
 
   <!-- pad boxes -->
@@ -73,19 +64,18 @@
       <rect x="250" y="425" width="150" height="50" rx="6"/>
     </g>
     <g fill="#2a5f9e" font-size="12" text-anchor="middle">
-      <text x="325" y="97">protection</text><text x="325" y="113">1M · 10k · 2×BAT85</text>
-      <text x="325" y="167">protection</text><text x="325" y="183">1M · 10k · 2×BAT85</text>
-      <text x="325" y="237">protection</text><text x="325" y="253">1M · 10k · 2×BAT85</text>
-      <text x="325" y="307">protection</text><text x="325" y="323">1M · 10k · 2×BAT85</text>
-      <text x="325" y="377">protection</text><text x="325" y="393">1M · 10k · 2×BAT85</text>
-      <text x="325" y="447">protection</text><text x="325" y="463">1M · 10k · 2×BAT85</text>
+      <text x="325" y="97">protection</text><text x="325" y="113">1M · 10k · 5V1 · 1k</text>
+      <text x="325" y="167">protection</text><text x="325" y="183">1M · 10k · 5V1 · 1k</text>
+      <text x="325" y="237">protection</text><text x="325" y="253">1M · 10k · 5V1 · 1k</text>
+      <text x="325" y="307">protection</text><text x="325" y="323">1M · 10k · 5V1 · 1k</text>
+      <text x="325" y="377">protection</text><text x="325" y="393">1M · 10k · 5V1 · 1k</text>
+      <text x="325" y="447">protection</text><text x="325" y="463">1M · 10k · 5V1 · 1k</text>
     </g>
     <text x="205" y="88" font-size="11" fill="#555">jack</text>
     <text x="20" y="500" font-size="12" fill="#555">Placement is free: plug each pad into the sound you want.</text>
     <text x="20" y="516" font-size="12" fill="#555">Cable: shielded, 3.5 mm mono jack</text>
     <text x="20" y="532" font-size="12" fill="#555">(tip = piezo red, sleeve = black = GND)</text>
-    <text x="250" y="560" font-size="12" fill="#c62828">red rail = +5V (for D1)</text>
-    <text x="250" y="576" font-size="12" fill="#111">black rail = GND</text>
+    <text x="330" y="576" font-size="12" fill="#111">GND rail (all pads)</text>
   </g>
 
   <!-- Mega -->
@@ -93,7 +83,6 @@
   <text x="620" y="300" font-size="18" font-weight="bold" fill="#fff" text-anchor="middle">Arduino</text>
   <text x="620" y="322" font-size="18" font-weight="bold" fill="#fff" text-anchor="middle">Mega 2560</text>
   <g fill="#fff" font-size="13" font-weight="bold">
-    <text x="530" y="74">5V</text>
     <text x="530" y="99">A0</text><text x="530" y="169">A1</text><text x="530" y="239">A2</text>
     <text x="530" y="309">A3</text><text x="530" y="379">A4</text><text x="530" y="449">A5</text>
     <text x="530" y="584">GND</text>
@@ -131,5 +120,5 @@
   <rect x="840" y="455" width="145" height="90" rx="6" fill="#fdecec" stroke="#b3261e" stroke-width="1.5"/>
   <g font-size="12" fill="#111"><text x="850" y="475" font-weight="bold">Power when worn</text><text x="850" y="491">7–12 V battery</text><text x="850" y="507">(+ VIN, − GND)</text><text x="850" y="523">or a USB power bank</text><text x="850" y="539">on the USB port</text></g>
 
-  <text x="20" y="625" font-size="12" fill="#555">The +5V rail for the diodes comes from the Mega 5V pin. Never feed more than 5 V into any A-pin, and never connect a battery to the 5V pin (use VIN or USB).</text>
+  <text x="20" y="625" font-size="12" fill="#555">Protection per pad: see protection-circuit.svg. Never feed more than 5 V into any A-pin, and never connect a battery to the 5V pin (use VIN or USB).</text>
 </svg>

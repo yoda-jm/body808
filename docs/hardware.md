@@ -17,31 +17,49 @@ internal clamp diodes absorb the spikes. Each stomp stresses them, though, and
 they eventually fail. The first symptom is usually one analog input reading wrong,
 or the whole ADC drifting. A strong enough spike can also latch up the chip.
 
-The protection below keeps every analog pin between −0.3 V and 5.3 V, whatever
-the piezo does.
+The protection below keeps every analog pin inside its limits, whatever the
+piezo does.
 
 ## Protection circuit (one per pad)
 
 ![Protection circuit](protection-circuit.svg)
 
+```
+piezo red ──┬──[ R2 10k ]──┬──[ R3 1k ]──> A0..A5
+            │              │
+          R1 1M         D1 zener 5.1 V (BZX55C5V1), band → signal
+            │              │
+piezo black ┴──────────────┴─────────────> GND
+```
+
 | Part | Value | Role |
 |------|-------|------|
 | R1 | 1 MΩ | Across the piezo. Drains its charge so the signal returns to 0 V between hits, and sets how fast the pulse decays. Lower values (470 kΩ) give a shorter pulse and less sensitivity. |
-| R2 | 10 kΩ | In series. Limits the current that flows into the diodes on a big spike (100 V / 10 kΩ = 10 mA, for well under a millisecond). |
-| D1 | BAT85 Schottky | Anode on the signal, band (cathode) on +5V. Clamps positive spikes to about 5.3 V. |
-| D2 | BAT85 Schottky | Band (cathode) on the signal, anode on GND. Clamps negative spikes to about −0.3 V. |
+| R2 | 10 kΩ | In series. Limits the current into the zener on a big spike (100 V / 10 kΩ = 10 mA, for well under a millisecond). |
+| D1 | BZX55C5V1 zener, 5.1 V | Band (cathode) on the signal, anode on GND. Positive spikes: conducts at ~5.1 V. Negative spikes: conducts forward at ~−0.7 V. |
+| R3 | 1 kΩ | Between the zener and the pin. The zener's −0.7 V is a bit past the pin's −0.5 V limit, so the chip's own protection diodes conduct a little: R3 keeps that current under ~0.5 mA, which they handle forever. It also covers the zener's tolerance (4.8–5.4 V) on the positive side. |
 
 Notes:
 
-- **Schottky, not regular diodes.** A 1N4148 only conducts at about 0.6–0.7 V,
-  which is past the −0.5 V limit, so the chip's internal diodes would conduct
-  first. BAT85, BAT43, 1N5817 or the dual BAT54S (SMD) all work.
-- The +5V for D1 comes from the Mega's **5V pin**. All six D1s share it.
-- The diodes leak a little current, which adds a small offset to the readings at
-  rest (a few ADC counts). Calibration takes care of it, see [firmware.md](firmware.md).
-- An alternative you'll often see online is a 5.1 V zener in place of D1+D2.
-  It also works with R2, but it starts conducting softly from about 4 V and
-  compresses loud hits. The Schottky clamp is sharper.
+- **Check the zener's value before soldering it.** In an assortment pack they all
+  look the same: read the tiny print on the glass body (`5V1` / `C5V1`), or test it:
+  9 V battery → 1 kΩ → zener (band towards +) → battery −, and measure about 5.1 V across
+  the zener. A 12 V zener by mistake gives **no protection at all**.
+- A **4.7 V zener** (`4V7`, likely in your pack) works too, with more safety margin, but it
+  starts compressing loud hits earlier.
+- A zener starts leaking softly from about 4 V, so very loud hits are slightly
+  compressed near the top of the range. Calibration takes care of it: `maxLevel`
+  will end up around 800–900 rather than 1023.
+- No +5V wire is needed: everything is between the signal and GND.
+
+### Alternative: two Schottky diodes
+
+If you have BAT85 (or BAT43, 1N5817, BAT54S) Schottky diodes, they make a sharper
+clamp: replace D1 and R3 with **D1 from the signal to +5V (band to +5V)** and **D2
+from GND to the signal (band to the signal)**. Schottky diodes conduct at ~0.3 V,
+before the chip's own diodes, so R3 isn't needed, but the board then needs a +5V
+wire from the Mega's 5V pin. Regular silicon diodes (1N4148) are **not** a
+substitute: they conduct at 0.6–0.7 V, like the zener, so they'd still need R3.
 
 ## Bill of materials
 
@@ -52,7 +70,8 @@ Per pad (×6):
 | 1 | Piezo disc, 27 mm or 35 mm, with leads |
 | 1 | 1 MΩ resistor, ¼ W |
 | 1 | 10 kΩ resistor, ¼ W |
-| 2 | BAT85 Schottky diode (DO-35) |
+| 1 | 1 kΩ resistor, ¼ W |
+| 1 | BZX55C5V1 zener diode (5.1 V, 0.5 W) |
 | 1 | 3.5 mm mono jack socket (panel or PCB) and a mono plug |
 | ~1.5 m | thin shielded cable (1 core + shield), or a twisted pair |
 | 1 | stiff disc (coin, 3 mm plastic or plywood) and foam (EVA / neoprene) |
@@ -70,29 +89,27 @@ Shared:
 
 ## Building the protection board
 
-1. Draw two rails along the board: **+5V** (red wire to the Mega 5V pin) and
-   **GND** (black wire to a Mega GND pin).
-2. For each channel solder R1, R2, D1 and D2 as in the schematic. Mind the
-   **band** on the diodes: D1's band goes to +5V, D2's band goes to the signal.
+1. Run a **GND** rail along the board (black wire to a Mega GND pin).
+2. For each channel solder R1, R2, D1 and R3 as in the schematic. Mind the **band**
+   on the zener: it goes to the signal side (the R2/R3 junction), the other end to GND.
 3. Wire each jack: tip to the R1/R2 junction, sleeve to GND.
-4. Wire each channel output (the R2/D1/D2 junction) to A0 … A5.
+4. Wire each channel output (the far end of R3) to A0 … A5.
 
 ### Check before plugging into the Mega
 
 Do this with the board **not connected** to the Mega, using a multimeter:
 
-1. **Rails not shorted**: resistance between +5V and GND should be high (it reads
-   through the diodes and resistors, but never near 0 Ω).
-2. **Diode mode, each channel** (probe on the R2/D1/D2 junction, "out"):
-   - red probe on *out*, black on *+5V* → about 0.2–0.4 V (D1 conducts)
-   - red on *+5V*, black on *out* → OL (open)
-   - red on *GND*, black on *out* → about 0.2–0.4 V (D2 conducts)
-   - red on *out*, black on *GND* → OL
-   If a channel reads ~0.3 V in both directions or 0 V, a diode is reversed or shorted.
-3. **Resistance from tip to GND** (piezo unplugged): about 1 MΩ.
+1. **Diode mode, each channel**, probes on the zener's two ends (R2/R3 junction and GND):
+   - red probe on *GND*, black on the junction → about 0.6–0.8 V (zener conducts forward)
+   - red on the junction, black on *GND* → OL (a meter's diode test can't reach 5.1 V)
+   If you read ~0 V either way, the zener is shorted or there's a solder bridge. If you
+   read ~0.7 V the other way round, the zener is reversed.
+2. **Resistance from tip to GND** (piezo unplugged): about 1 MΩ.
+3. **Resistance from tip to the channel output**: about 11 kΩ (R2 + R3).
+4. **No short between neighbouring channels**: resistance between two outputs is high.
 
-Then connect the board, power the Mega from USB, and measure 5 V between the +5V
-and GND rails. Start with `CALIBRATE 1` and **tap softly first**.
+Then connect the board, power the Mega from USB, start with `CALIBRATE 1` and
+**tap softly first**.
 
 ## The pads
 

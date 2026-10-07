@@ -9,12 +9,12 @@
   optional: a hard hit gives tens of volts, the pin survives -0.5..5.5 V.
   See docs/hardware.md and docs/protection-circuit.svg.
 
-      piezo red ---+----[ R2 10k ]----+-----------> A0..A5
+      piezo red ---+----[ R2 10k ]----+----[ R3 1k ]----> A0..A5
                    |                  |
-                R1 1M     D1 BAT85: anode on this node, band (cathode) to +5V
-                   |      D2 BAT85: band (cathode) on this node, anode to GND
+                R1 1M          D1 zener 5.1 V (BZX55C5V1)
+                   |             band (cathode) on this node, anode to GND
                    |                  |
-      piezo black -+------------------+-----------> GND
+      piezo black -+------------------+-----------------> GND
 
   Output (pick with MIDI_MODE below):
     MIDI_MODE_DISPLAY     human-readable hits on the USB serial monitor (115200)
