@@ -1,5 +1,5 @@
 /*
-  beat-corn — body percussion with piezo sensors -> MIDI
+  body808 — body percussion with piezo sensors -> MIDI
 
   Board: Arduino Mega 2560
   Up to 6 piezo discs on A0..A5. Each hit becomes a MIDI Note On whose
@@ -218,7 +218,7 @@ void setup() {
   }
 
   if (MIDI_MODE & MIDI_MODE_DISPLAY) {
-    Serial.print(F("beat-corn ready, pads: "));
+    Serial.print(F("body808 ready, pads: "));
     Serial.println(PAD_COUNT);
   }
 }

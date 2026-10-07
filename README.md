@@ -1,4 +1,4 @@
-# beat-corn
+# Body808
 
 Wearable body percussion: piezo sensors on the feet, chest, legs and hands turn
 body hits into MIDI drum notes, sent by radio to a sampler that plays beatbox
@@ -52,7 +52,7 @@ Notes follow the General MIDI drum map, so any drum sampler works out of the box
 ## Files
 
 ```
-beat-corn.ino                  firmware (Arduino Mega 2560)
+body808.ino                    firmware (Arduino Mega 2560)
 tools/serial_midi_bridge.py    USB/radio serial port -> ALSA MIDI port
 tools/make_hydrogen_kit.py     samples/ folder -> Hydrogen drumkit
 docs/                          documentation and schematics (SVG)

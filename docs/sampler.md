@@ -12,12 +12,12 @@
 ### Serial bridge
 
 ```sh
-python3 -m venv ~/.venv/beat-corn
-~/.venv/beat-corn/bin/pip install pyserial python-rtmidi
-~/.venv/beat-corn/bin/python tools/serial_midi_bridge.py /dev/ttyACM0 -v
+python3 -m venv ~/.venv/body808
+~/.venv/body808/bin/pip install pyserial python-rtmidi
+~/.venv/body808/bin/python tools/serial_midi_bridge.py /dev/ttyACM0 -v
 ```
 
-It creates an ALSA MIDI port named `beat-corn`. `-v` prints each message, useful
+It creates an ALSA MIDI port named `body808`. `-v` prints each message, useful
 to check that hits arrive. The Arduino IDE serial monitor must be closed (only one
 program can open the port).
 
@@ -25,7 +25,7 @@ program can open the port).
 
 1. **Preferences → Audio System**: JACK (or PipeWire's JACK) with a small buffer.
 2. **Preferences → MIDI System**:
-   - Driver: ALSA, Input: `beat-corn` (or your radio/USB-MIDI device)
+   - Driver: ALSA, Input: `body808` (or your radio/USB-MIDI device)
    - Channel: All, or 10
    - Tick **Use output note as input note**. Hydrogen then picks each instrument
      by its MIDI note (36 = kick, 38 = snare…), instead of mapping note 36 to the
@@ -51,10 +51,10 @@ soft hits play `01_soft.wav`, hard hits play `03_hard.wav`. One file per sound i
 
 ```sh
 python3 tools/make_hydrogen_kit.py samples/
-# -> ~/.hydrogen/data/drumkits/BeatCorn/drumkit.xml
+# -> ~/.hydrogen/data/drumkits/Body808/drumkit.xml
 ```
 
-Restart Hydrogen (or reload the Sound Library) and load **BeatCorn**. Open and closed
+Restart Hydrogen (or reload the Sound Library) and load **Body808**. Open and closed
 hi-hat are in the same mute group, so the closed hat cuts the open hat like a real hi-hat.
 
 ### Recording your own beatbox samples

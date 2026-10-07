@@ -12,7 +12,7 @@ Layout of the samples folder (one sub-folder per pad, names as in PADS):
 Files in a pad folder are sorted by name and used as velocity layers,
 softest first, splitting the velocity range evenly. A single file is fine.
 
-    python3 tools/make_hydrogen_kit.py samples/            # -> ~/.hydrogen/data/drumkits/BeatCorn
+    python3 tools/make_hydrogen_kit.py samples/            # -> ~/.hydrogen/data/drumkits/Body808
     python3 tools/make_hydrogen_kit.py samples/ --name MyBox
 
 In Hydrogen: Preferences > MIDI System > tick "Use output note as input note",
@@ -24,7 +24,7 @@ import sys
 from pathlib import Path
 from xml.sax.saxutils import escape
 
-# Must match the notes in beat-corn.ino
+# Must match the notes in body808.ino
 PADS = [
     ("kick", 36),
     ("snare", 38),
@@ -90,7 +90,7 @@ def instrument_xml(index, name, note, files):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("samples", type=Path)
-    ap.add_argument("--name", default="BeatCorn")
+    ap.add_argument("--name", default="Body808")
     ap.add_argument("--dest", type=Path, default=Path.home() / ".hydrogen/data/drumkits")
     args = ap.parse_args()
 
@@ -118,8 +118,8 @@ def main():
     (kit_dir / "drumkit.xml").write_text(f"""<?xml version="1.0" encoding="UTF-8"?>
 <drumkit_info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.hydrogen-music.org/drumkit">
  <name>{escape(args.name)}</name>
- <author>beat-corn</author>
- <info>Beatbox kit for the beat-corn body percussion</info>
+ <author>body808</author>
+ <info>Beatbox kit for the body808 body percussion</info>
  <license>undefined license</license>
  <image></image>
  <imageLicense>undefined license</imageLicense>

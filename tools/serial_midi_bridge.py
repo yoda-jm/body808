@@ -5,11 +5,11 @@ Use it when the MIDI stream reaches the PC as a serial port: the Mega's USB
 in MIDI_MODE_USB_SERIAL (115200), or a radio receiver that shows up as
 /dev/ttyUSB* (often 31250 or 115200, check its docs).
 
-    python3 -m venv ~/.venv/beat-corn
-    ~/.venv/beat-corn/bin/pip install pyserial python-rtmidi
-    ~/.venv/beat-corn/bin/python tools/serial_midi_bridge.py /dev/ttyACM0
+    python3 -m venv ~/.venv/body808
+    ~/.venv/body808/bin/pip install pyserial python-rtmidi
+    ~/.venv/body808/bin/python tools/serial_midi_bridge.py /dev/ttyACM0
 
-Then connect "beat-corn" to Hydrogen (aconnect -l, or qjackctl's MIDI/ALSA tab).
+Then connect "body808" to Hydrogen (aconnect -l, or qjackctl's MIDI/ALSA tab).
 """
 import argparse
 import sys
@@ -28,7 +28,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("port", help="serial device, e.g. /dev/ttyACM0")
     ap.add_argument("--baud", type=int, default=115200)
-    ap.add_argument("--name", default="beat-corn")
+    ap.add_argument("--name", default="body808")
     ap.add_argument("-v", "--verbose", action="store_true")
     args = ap.parse_args()
 

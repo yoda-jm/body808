@@ -1,6 +1,6 @@
 # Firmware
 
-`beat-corn.ino` reads the 6 piezos, detects hits and sends MIDI drum notes.
+`body808.ino` reads the 6 piezos, detects hits and sends MIDI drum notes.
 
 ## Build and upload
 
