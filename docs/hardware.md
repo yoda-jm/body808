@@ -67,14 +67,14 @@ Per pad (×6):
 
 | Qty | Part |
 |-----|------|
-| 1 | Piezo disc, 27 mm or 35 mm, with leads |
+| 1 | Piezo disc, 27 mm, with leads (e.g. Timesetl) |
 | 1 | 1 MΩ resistor, ¼ W |
 | 1 | 10 kΩ resistor, ¼ W |
 | 1 | 1 kΩ resistor, ¼ W |
 | 1 | BZX55C5V1 zener diode (5.1 V, 0.5 W) |
 | 1 | 3.5 mm mono jack socket (panel or PCB) and a mono plug |
 | ~1.5 m | thin shielded cable (1 core + shield), or a twisted pair |
-| 1 | stiff disc (coin, 3 mm plastic or plywood) and foam (EVA / neoprene) |
+| 1 | rigid plate 40–60 mm (2–3 mm acrylic or PCB offcut) and 3–5 mm neoprene or EVA foam |
 
 Shared:
 
@@ -85,7 +85,7 @@ Shared:
 | 1 | 5-pin DIN female socket + 2 × 220 Ω (MIDI OUT for the WIDI Master) |
 | 1 | CME WIDI Master (Bluetooth MIDI radio, powered by the MIDI OUT) |
 | 1 | Power when worn: 9 V battery with a barrel plug, or a USB power bank |
-| | Velcro/elastic straps, a glove for the hand pads, an insole or ankle strap for the foot |
+| | Velcro/elastic straps, phone armbands, a chest strap, fingerless gloves; double-sided tape, epoxy or hot glue, Kapton tape |
 
 ## Building the protection board
 
@@ -113,33 +113,82 @@ Then connect the board, power the Mega from USB, start with `CALIBRATE 1` and
 
 ## The pads
 
+The pads use **27 mm piezo discs** (brass disc with a ~20 mm ceramic layer, leads
+pre-soldered, like the Timesetl packs). That's the common size for DIY drum
+triggers: small enough for hands and ankles, and plenty of signal for body hits.
+
+### How a piezo disc works (and breaks)
+
+- It produces a voltage when it **bends**. A hit bends the plate it is glued to,
+  which bends the disc: that's the signal. Pressing on it without movement gives
+  nothing.
+- The **ceramic is brittle**. It cracks if the disc is folded, crushed under body
+  weight, or hit directly on a hard edge. A cracked disc gives weak or crackling
+  signals. Never let it carry weight, and always back it with a rigid plate.
+- The **red wire** is on the ceramic (silver) side, the **black wire** on the brass.
+  Black = GND.
+- The pre-soldered leads are thin and break at the solder point. Don't use them as
+  the cable: extend them on the plate, then strain-relieve (see below).
+
+### The sandwich
+
 A bare piezo stuck on skin is a poor sensor: it clicks, picks up every movement
-and the brass edge can cut. Make a sandwich instead:
+and the brass edge can cut. Make a sandwich:
 
 ```
-   strap / glove / insole
-   foam 3-5 mm            <- spreads the hit, protects against stomps
-   stiff disc (coin)      <- collects the hit over the whole surface
-   piezo disc, brass side glued to the disc (hot glue or epoxy)
-   foam 2-3 mm            <- against the body, decouples from neighbour pads
+   outside, where you hit
+   ─────────────────────────  cover: fabric, or 2-3 mm EVA foam
+   ═════════════════════════  rigid plate, 40-60 mm (bigger than the disc)
+   ▬▬▬▬▬▬▬▬▬▬▬▬▬               piezo, BRASS side glued to the plate
+   ░░░░░░░░░░░░░░░░░░░░░░░░░  foam 3-5 mm (EVA or neoprene), against the body
+   body / shoe / glove
 ```
 
-- **Strain relief**: the piezo's leads break at the solder joint. Glue the cable
-  to the disc with a blob of hot glue right after the solder points, and tape it
-  again a few cm further.
-- **Insulate** the solder points (hot glue or tape). Sweat on bare joints creates
-  noise and corrosion.
-- **Feet**: put the pad under the heel or the ball of the foot in an insole, with
-  thick foam above and below. Stomps are by far the strongest signals: they need
-  the protection the most. Give the input a foot pad is plugged into a higher
-  `threshold`/`maxLevel` in the firmware (for example 80 / 900).
-- **Hands**: in the palm of a fingerless glove, or on the back of the hand.
-  The signal is weaker than the feet.
-- **Chest / legs**: on a strap, over a bone or a firm spot (sternum, outer thigh).
-  Soft areas absorb the hit.
-- **Crosstalk**: a stomp also shakes the legs and the chest. The foam layers and
-  the firmware crosstalk filter deal with it, but keep pads apart and well
-  decoupled.
+The **plate** gathers the hit over a bigger area than the disc and bends it
+evenly, so you don't have to hit the exact spot, and it protects the ceramic. The
+**foam against the body** decouples the pad from the body's own movements and from
+the neighbouring pads.
+
+### Materials
+
+| Layer | Recommended | Also works | Avoid |
+|-------|-------------|------------|-------|
+| Rigid plate | 2–3 mm acrylic (PMMA) or a PCB/FR4 offcut, 40–60 mm round | 3 mm plywood, the lid of a small tin, thick ABS (old phone case) | metal coins (smaller than the disc), flexible plastic |
+| Body-side foam | **Neoprene** 3–5 mm (an old mouse pad is perfect: neoprene + fabric) | **EVA foam** craft sheets 2–5 mm, a piece of yoga mat (closed cell) | open-cell sponge (soaks up sweat, too soft) |
+| Glue piezo → plate | **thin double-sided tape** while testing (reversible) | then **2-part epoxy** or **hot glue** once the placement is final | thick foam tape between disc and plate (absorbs the hit), superglue (brittle, cracks) |
+| Glue plate → foam | contact glue (neoprene glue), or double-sided tape | hot glue | — |
+| Insulation | hot glue over the solder points, **Kapton tape** or heat-shrink | electrical tape | bare solder against skin (sweat) |
+| Holding on the body | elastic straps with Velcro, **sports phone armbands** (arm/thigh), an old **heart-rate chest strap** (chest), fingerless gloves (hands) | sewn into clothes | rigid straps that pull the pad sideways |
+
+### Wiring on the pad
+
+1. Glue the disc (brass side) in the middle of the plate.
+2. Glue the end of the shielded cable on the plate next to the disc, solder the
+   disc's short leads to it (red → core, black → shield), and cover the joints and
+   the cable end with a **blob of hot glue**. The cable is then held by the plate,
+   not by the disc's leads.
+3. Tape the cable again a few cm further on the strap.
+4. Cover the ceramic side with a dot of hot glue or Kapton tape, then the foam.
+
+Test each pad on the bench (`CALIBRATE 1`, tap with a finger) before you wear it.
+
+### Placement
+
+- **Feet**: don't put the disc under the sole or in an insole. Body weight bends it
+  permanently and can crack it, and walking triggers it. Strap the pad on the
+  **outside of the shoe** instead: on the heel counter (the back of the shoe) or the
+  side of the ankle. A stomp sends a strong shock through the shoe without the disc
+  carrying any weight. Stomps are still by far the strongest signals: give the input
+  a foot pad is plugged into a higher `threshold`/`maxLevel` (for example 80 / 900).
+- **Hands**: in the palm of a fingerless glove (the plate protects the disc when you
+  clap), or on the back of the hand to hit on the body. The palm gives a clap-like
+  feel; the plate size matters most here.
+- **Chest**: on the sternum, held by a heart-rate chest strap or an elastic band.
+  Bone transmits the hit well; soft areas absorb it.
+- **Legs**: on the outer thigh with an armband-type strap. Slapping the thigh is a
+  natural body-percussion move.
+- **Crosstalk**: a stomp also shakes the legs and the chest. The foam layers and the
+  firmware crosstalk filter deal with it, but keep pads apart and well decoupled.
 
 ## Cables and connectors
 
