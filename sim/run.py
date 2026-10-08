@@ -154,20 +154,23 @@ def firmware_notes(r):
     return firmware_trace(r)[1]
 
 
-def firmware_trace(r):
+def firmware_trace(r, ratio=0.25, decay_ms=50.0, mask_ms=MASK_MS, phase_ms=0.0):
     """Replay the pin voltage through body808.ino's detector for one pad.
 
     Same rules as updatePad(): threshold, 2.5 ms peak scan, 30 ms mask, then a
-    retrigger threshold of half the last peak decaying over 80 ms. Samples
-    every 0.2 ms, the firmware's scan period for 6 pads. Returns the samples
+    retrigger threshold of RETRIGGER_RATIO x the last peak decaying over DECAY_US
+    (defaults = body808.ino's). Samples
+    every 0.2 ms, the firmware's scan period for 6 pads, starting phase_ms
+    late. ratio, decay_ms, mask_ms = RETRIGGER_RATIO, DECAY_US, MASK_US.
+    Returns the samples
     as (time ms, ADC value, threshold or None while masked) and the
     (time ms, ADC peak) of each Note On.
     """
-    scan_ms, decay_ms, period_ms = 2.5, 80.0, 0.2
+    scan_ms, period_ms = 2.5, 0.2
     samples, notes, state, peak, start, last_hit, last_peak = [], [], "idle", 0, 0.0, 0.0, 0
     t_s = r["t"]
     i = 0
-    t = t_s[0] * 1e3
+    t = t_s[0] * 1e3 + phase_ms
     while t <= t_s[-1] * 1e3:
         while i + 1 < len(t_s) and t_s[i + 1] * 1e3 <= t:
             i += 1
@@ -176,8 +179,8 @@ def firmware_trace(r):
         if state == "idle":
             thr = THRESHOLD
             since = t - last_hit
-            if last_peak and since < MASK_MS + decay_ms:
-                thr = max(THRESHOLD, int(last_peak * 0.5 * (1 - (since - MASK_MS) / decay_ms)))
+            if last_peak and since < mask_ms + decay_ms:
+                thr = max(THRESHOLD, int(last_peak * ratio * (1 - (since - mask_ms) / decay_ms)))
             samples.append((t, value, thr))
             if value > thr:
                 state, start, peak = "scan", t, value
@@ -189,7 +192,7 @@ def firmware_trace(r):
                 state, last_hit, last_peak = "masked", t, peak
         else:
             samples.append((t, value, thr))
-            if t - last_hit >= MASK_MS:
+            if t - last_hit >= mask_ms:
                 state = "idle"
         t += period_ms
     return samples, notes

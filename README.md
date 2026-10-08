@@ -38,8 +38,33 @@ Notes follow the General MIDI drum map, so any drum sampler works out of the box
 - [docs/sampler.md](docs/sampler.md): getting MIDI into the PC, Hydrogen setup, making
   the beatbox kit, latency
 - [docs/simulation.md](docs/simulation.md): simulated hits through 7 board
-  configurations (schematics, waveforms, detection), with pros and cons of each
+  configurations (schematics, waveforms, detection), pros and cons of each, and the
+  firmware's retrigger tuning
 - [sim/README.md](sim/README.md): the simulation's models, sources and how to run it
+
+## Simulation
+
+The protection board and the hit detector were simulated in ngspice before building
+([docs/simulation.md](docs/simulation.md)): a piezo disc model with the real discs'
+values, ~60 hits per board configuration from soft to 200 V, and the firmware's
+detector replayed on every simulated pin voltage.
+
+- **The pin is safe**: at most 131 µA into the Mega's own protection diodes on a 200 V
+  hit (budget 0.5 mA), with the 1N4733A zener.
+- **One note per hit**, in every hit shape and every configuration tried.
+- **Velocity only works for small signals as built**: 0.2–3 V across the disc. If
+  your pads give more (check with `CALIBRATE`), a 100 nF capacitor across the disc
+  and R1 = 100 kΩ moves the window to 1–16 V.
+- **Retrigger tuning**: `RETRIGGER_RATIO` 0.5 → 0.25 and `DECAY_US` 80 → 50 ms, so a
+  soft hit right after a loud one is no longer lost, without ghost notes.
+
+![Velocity vs hit strength, every configuration](docs/sim/transfer.svg)
+
+```
+python3 sim/run.py        # sweeps: stress, tolerances, ringing, transfer
+python3 sim/report.py     # docs/simulation.md figures, per configuration
+python3 sim/tuning.py     # firmware retrigger settings
+```
 
 ## Quick start
 
@@ -60,7 +85,7 @@ Notes follow the General MIDI drum map, so any drum sampler works out of the box
 body808.ino                    firmware (Arduino Mega 2560)
 tools/serial_midi_bridge.py    USB/radio serial port -> ALSA MIDI port
 tools/make_hydrogen_kit.py     samples/ folder -> Hydrogen drumkit
-sim/                           ngspice models and sweeps of the protection circuit
+sim/                           ngspice models, sweeps, firmware replay and tuning
 docs/                          documentation and schematics (SVG)
 attic/                         the original Blink/MIDI test sketch
 ```

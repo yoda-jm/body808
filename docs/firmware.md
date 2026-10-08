@@ -85,8 +85,8 @@ Remove lines to use fewer pads, or add lines with A6, A7… for more.
 |----------|---------|--------------|--------------|
 | `SCAN_US` | 2500 µs | velocity is random / too low (peak missed) | you feel latency |
 | `MASK_US` | 30000 µs | one hit plays twice | fast rolls lose notes |
-| `DECAY_US` | 80000 µs | ringing after loud hits retriggers | soft hit right after a loud one is lost |
-| `RETRIGGER_RATIO` | 0.5 | same as DECAY_US | same as DECAY_US |
+| `DECAY_US` | 50000 µs | ringing after loud hits retriggers | soft hit right after a loud one is lost |
+| `RETRIGGER_RATIO` | 0.25 | same as DECAY_US | same as DECAY_US |
 | `XTALK_RATIO` | 0.4 | hitting a pad also plays another one | two simultaneous hits drop the softer one |
 | `XTALK_US` | 8000 µs | crosstalk still plays a bit late | — |
 | `VELOCITY_CURVE` | 0.6 | soft hits are too loud | you must hit too hard to get loud notes |
@@ -119,7 +119,9 @@ IDLE --value > threshold--> SCANNING --after SCAN_US--> MASKED --after MASK_US--
   `VELOCITY_CURVE`, scaled to 1–127.
 - **Retrigger protection**: after `MASK_US`, the threshold starts at
   `RETRIGGER_RATIO × last peak` and falls back to `threshold` over `DECAY_US`, so the
-  piezo's ringing doesn't fire again.
+  piezo's ringing doesn't fire again. The defaults (0.25, 50 ms) come from simulation:
+  lower ones let the zener's tail after a hard hit play a ghost note
+  ([simulation.md](simulation.md#firmware-retrigger-tuning)).
 - **Crosstalk**: a hit is dropped if another pad fired in the last `XTALK_US` with a peak
   more than `1 / XTALK_RATIO` times stronger.
 - **ADC crosstalk**: each pin is read twice and the first value thrown away. The ADC

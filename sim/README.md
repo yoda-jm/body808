@@ -2,7 +2,8 @@
 
 > The full report, with a schematic, waveforms and detection test for each tested
 > board configuration, is [docs/simulation.md](../docs/simulation.md). It is drawn by
-> `python3 sim/report.py`. This page covers the models, their sources, and `run.py`.
+> `python3 sim/report.py`; the firmware's retrigger settings come from
+> `python3 sim/tuning.py`. This page covers the models, their sources, and `run.py`.
 
 ngspice simulations of a piezo hit going through the protection board into the
 Mega's analog pin. They check that the pin survives any hit, what the ADC reads, and

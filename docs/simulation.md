@@ -9,15 +9,19 @@ hit. They differ in *which hits* get a velocity range: as built, only 0.2–3 V 
 the disc; with a 100 nF capacitor across the disc, 1.1–16 V. Which one you need depends
 on how strong your pads' hits really are, which only a `CALIBRATE` capture can tell.
 
+The simulation also retuned the firmware: `RETRIGGER_RATIO` 0.5 → 0.25 and `DECAY_US`
+80 → 50 ms, so a soft hit right after a loud one is no longer swallowed
+([details](#firmware-retrigger-tuning)). Everything below uses the new values.
+
 | Configuration | Velocity window (disc V) | Pin diode current, worst | Above threshold, longest | Soft hit 60 ms after a hard one | Verdict |
 |---|---|---|---|---|---|
-| [1. As built (1N4733A)](#1-as-built-r1-1-mω-1n4733a) | 0.2 – 2.9 V | 131 µA | 61 ms | played (but at velocity 127) | **keep if hits stay under ~3 V** |
-| [2. As built, BZX55C5V1](#2-as-built-with-the-bzx55c5v1) | 0.2 – 2.9 V | 360 µA | 62 ms | played (127) | works, less margin |
-| [3. 100 nF across the disc](#3-100-nf-across-the-disc-r1-100-kω) | 1.1 – 16 V | 94 µA | 36 ms | missed | **best if hits are strong** |
-| [4. 200 nF across the disc](#4-200-nf-across-the-disc-r1-100-kω) | 2 – 30 V | 81 µA | 44 ms | missed | for very hard stomps |
-| [5. 100 nF + 22 nF smoothing](#5-100-nf-across-the-disc-22-nf-after-r2) | 1.5 – 22 V | 94 µA | 17 ms | missed | not worth it |
-| [6. Trimmer, wiper at 0.3](#6-r1-as-a-1-mω-trimmer-wiper-at-03) | 0.66 – 10 V | 43 µA | 25 ms | missed | for finding the ratio only |
-| [7. Trimmer, wiper at 0.1](#7-r1-as-a-1-mω-trimmer-wiper-at-01) | 2 – 29 V | 37 µA | 19 ms | missed | for finding the ratio only |
+| [1. As built (1N4733A)](#1-as-built-r1-1-mω-1n4733a) | 0.2 – 2.9 V | 131 µA | 61 ms | played, but both at velocity 127 | **keep if hits stay under ~3 V** |
+| [2. As built, BZX55C5V1](#2-as-built-with-the-bzx55c5v1) | 0.2 – 2.9 V | 360 µA | 62 ms | played, both at 127 | works, less margin |
+| [3. 100 nF across the disc](#3-100-nf-across-the-disc-r1-100-kω) | 1.1 – 16 V | 94 µA | 36 ms | played: 116 then 41 | **best if hits are strong** |
+| [4. 200 nF across the disc](#4-200-nf-across-the-disc-r1-100-kω) | 2 – 30 V | 81 µA | 44 ms | played: 76 then 22 | for very hard stomps |
+| [5. 100 nF + 22 nF smoothing](#5-100-nf-across-the-disc-22-nf-after-r2) | 1.5 – 22 V | 94 µA | 17 ms | played: 69 then 18 | not worth it |
+| [6. Trimmer, wiper at 0.3](#6-r1-as-a-1-mω-trimmer-wiper-at-03) | 0.66 – 10 V | 43 µA | 25 ms | played: 127 then 57 | for finding the ratio only |
+| [7. Trimmer, wiper at 0.1](#7-r1-as-a-1-mω-trimmer-wiper-at-01) | 2 – 29 V | 37 µA | 19 ms | played: 63 then 14 | for finding the ratio only |
 
 Velocity window = disc voltages between the threshold (ADC 40, velocity 1) and
 `maxLevel` (ADC 600, velocity 127), for a 1 ms hit. Pin diode budget: 0.5 mA
@@ -37,7 +41,8 @@ shapes tried.
 - **Pin**: ATmega2560 clamp diodes, 10 pF, 14 pF sample-and-hold.
 - **Firmware**: the pin voltage is read every 0.2 ms (6 pads, each read twice) and run
   through the rules of `updatePad()`: threshold 40, 2.5 ms peak scan, Note On, 30 ms
-  mask, then a retrigger threshold of half the last peak, decaying to 40 over 80 ms.
+  mask, then a retrigger threshold of a quarter of the last peak, decaying to 40 over
+  50 ms (`RETRIGGER_RATIO`, `DECAY_US`; tuned [below](#firmware-retrigger-tuning)).
 
 Details and sources: [sim/README.md](../sim/README.md). To rebuild this page's figures:
 `python3 sim/report.py` (5–10 minutes, cached afterwards).
@@ -65,17 +70,18 @@ spread out more than loud ones.
 
 ## Detection and dead time
 
-After a hit, the pad is deaf for 30 ms, then for 80 ms a new hit must read louder than
-a threshold that starts at half the last hit's peak and falls to the base threshold 40.
-After a hard hit (peak 947) as built:
+After a hit, the pad is deaf for 30 ms, then for 50 ms a new hit must read louder than
+a threshold that starts at a quarter of the last hit's peak and falls to the base
+threshold 40. After a hard hit (peak 947) as built:
 
 | Second hit reads | Same hit across the disc | Plays if it comes at least … after the first note |
 |---|---|---|
-| 474 or more | 2.3 V or more | 30 ms |
-| 300 | 1.5 V | 59 ms |
-| 200 | 1 V | 76 ms |
-| 100 | 0.5 V | 93 ms |
-| 41 | 0.2 V | 103 ms |
+| 237 or more | 1.2 V or more | 30 ms |
+| 200 | 1 V | 38 ms |
+| 100 | 0.5 V | 59 ms |
+| 41 | 0.2 V | 71 ms |
+
+(Before tuning, with half the peak over 80 ms: 30 ms only from 2.3 V, and up to 103 ms.)
 
 For scale: 16th notes at 120 bpm are 125 ms apart, 32nd notes 62 ms.
 
@@ -83,24 +89,53 @@ Each configuration below has a **detection test**: a hard 20 V knock, then a 4×
 5 V knock 60 ms later, as the firmware sees them.
 
 - As built, both play, but both at velocity 127: the zener squeezes the two hits to
-  almost the same reading, so the retrigger threshold doesn't stop the second one, and
-  the accent is lost.
-- In every configuration that reads hits proportionally, the second hit is
-  **missed**. 57 ms after the note the threshold is still at 33 % of the first
-  peak (170 counts with 100 nF), and the second hit is only ~25 % of the first in
-  voltage. With 100 nF it peaks at 187, just above, but the firmware's readings every
-  0.2 ms only catch 122 of it (see below).
-
-That is a firmware setting, not the circuit: with a proportional board,
-`RETRIGGER_RATIO` (0.5) and `DECAY_US` (80 ms) can be lowered, since the ringing above
-threshold is shorter (17–44 ms instead of 61 ms). The simulation can check new values
-before you try them.
+  almost the same reading, and the accent is lost.
+- In every configuration that reads hits proportionally, both play with their own
+  velocity (100 nF: 116 then 41). With the old firmware values these second hits
+  were all **missed**: 57 ms after the note the threshold was still at 33 % of the
+  first peak.
 
 A second effect shows up with sharp knocks: the firmware reads each pad every 0.2 ms,
 and a 0.2 ms knock's peak is narrower than that. With 100 nF the 5 V knock peaks at 187
 counts but the firmware's readings only caught 122. As built the zener flattens the
 peak, so this doesn't happen. Expect some velocity jitter on very sharp hits with the
 capacitor configurations.
+
+## Firmware retrigger tuning
+
+The retrigger rule fights two failures: set too high, a soft hit right after a loud one
+is swallowed; set too low, the ringing or the zener tail of one hit plays a second
+note. Every combination of `RETRIGGER_RATIO` (0.5 to 0.1), `DECAY_US` (80 to 15 ms)
+and `MASK_US` (30 to 15 ms) was replayed on three boards, sampling at two different
+phases:
+
+- **36 single hits** per board (0.2/1/3 ms, Q 10/30/90, 5 to 100 V): each must give
+  exactly one note, in both phases.
+- **30 soft-after-loud pairs** per board: a 20 V hit, then one 2×, 4× or 10× softer,
+  35 to 110 ms later. Pairs whose second hit is too soft to play even alone (200 nF,
+  10× softer) don't count.
+
+![Retrigger tuning grid](sim/tuning.svg)
+
+| Board | Missed pairs, old (0.5, 80 ms, 30 ms) | Missed pairs, new (0.25, 50 ms, 30 ms) | Double notes, new |
+|---|---|---|---|
+| As built | 5 of 30 | 0 | none |
+| 100 nF across the disc | 14 of 30 | 6 (10× softer, within 60 ms) | none |
+| 200 nF across the disc | 6 of 20 | 0 | none |
+
+- **0.25, 50 ms, 30 ms** misses the fewest pairs of all the settings with no double
+  notes on any board (0.25 with 80 ms comes next: 9 missed with 100 nF). It is now the
+  default in `body808.ino`.
+- **As built, it sits on the edge**: a 30 ms decay or a 0.15 ratio lets the zener tail
+  of a sharp, hard, long-ringing hit (0.2 ms, Q 90) play a ghost note. If a pad plays
+  ghost notes ~50 ms after hard hits, raise `DECAY_US` back to 80 ms or the ratio to
+  0.35 (both still miss nothing as built).
+- **Capacitor boards have no tail**, so they tolerate much lower values: 100 nF is
+  clean down to a ratio of 0.1, which catches every pair.
+- **The mask can't go lower as built**: 20 or 15 ms double-triggers at 0.25. Fast rolls
+  stay limited to one hit every 30 ms per pad (33 per second).
+
+Rerun with `python3 sim/tuning.py` (prints every combination's details).
 
 ---
 
@@ -126,8 +161,10 @@ budget); zener 45 mW of its 1 W.
 
 The zener clips the disc's negative swings, which leaves the disc charged to 1–2 V
 after a hard hit. That tail drains through R1 in ~50 ms, which is why the pin stays
-above threshold for up to 61 ms. The decaying retrigger threshold is always far above
-it, so it never plays a note.
+above threshold for up to 61 ms. The decaying retrigger threshold stays above it, so
+it never plays a note, but this tail is what limits the [retrigger
+tuning](#firmware-retrigger-tuning): with a lower ratio or a shorter decay it plays a
+ghost note ~35–60 ms after hard, sharp hits.
 
 **Opinion:** the right board if your pads give less than ~3 V. It's the most sensitive
 setup and the zener's flat top makes sharp knocks read reliably. If normal hits read
@@ -181,14 +218,15 @@ dips to about −0.5 V for 10–30 ms after a hit (safe: 94 µA into the pin's d
 
 **Opinion:** the best choice if your hits are strong. Proportional from 1 to 20 V, a
 low-impedance source for the ADC, and two cheap parts per channel (100 nF ceramic
-"104", a 100 kΩ from the resistor kit). Lower `RETRIGGER_RATIO` with it, or soft hits
-right after loud ones get dropped.
+"104", a 100 kΩ from the resistor kit). With this board `RETRIGGER_RATIO` can go down
+to 0.1 (simulated without any double note, and then even hits 10× softer right after
+a loud one play); not with the board as built.
 
 | Pros | Cons |
 |---|---|
 | velocity window 1.1–16 V, proportional up to 20 V | hits under ~1.1 V across the disc are ignored |
 | low source impedance: the ADC reads correctly | sharp knocks: peak narrower than the 0.2 ms reading interval, some velocity jitter |
-| zener and pin barely stressed (13 mW, 94 µA) | needs a firmware retrigger retune for fast soft-after-loud |
+| zener and pin barely stressed (13 mW, 94 µA) | at 0.25, hits 10× softer within 60 ms of a loud one are dropped (0.1 fixes it) |
 | shorter time above threshold (36 ms) | ±10–20 % ceramic tolerance: calibrate per pad |
 
 ### 4. 200 nF across the disc, R1 100 kΩ
@@ -212,7 +250,7 @@ Too deaf for hand or chest pads.
 | Pros | Cons |
 |---|---|
 | velocity window 2–30 V | hits under 2 V are ignored |
-| least stress of the capacitor setups (7 mW, 81 µA) | same jitter and retrigger caveats as 100 nF |
+| least stress of the capacitor setups (7 mW, 81 µA) | same sharp-knock jitter as 100 nF |
 | same parts, doubled | longer above threshold than 100 nF (44 ms, on 0.2 ms Q 90 knocks) |
 
 ### 5. 100 nF across the disc, 22 nF after R2
@@ -290,8 +328,8 @@ still 9× the ADC's 10 kΩ.
 3. Readings mostly below 900 → keep it. Hard hits pinned at 900–1000 → add 100 nF
    across the disc and change R1 to 100 kΩ (configuration 3); 200 nF for the kick pad
    if it still saturates.
-4. With configuration 3 or 4, lower the firmware's retrigger threshold. The simulation
-   can check new values first.
+4. The firmware's retrigger settings (0.25, 50 ms) suit every configuration. With
+   configuration 3 only, `RETRIGGER_RATIO` 0.1 catches even softer follow-up hits.
 
 ## Limits
 

@@ -53,11 +53,13 @@ const uint8_t MIDI_CHANNEL = 9;  // 0-based: 9 = MIDI channel 10, the drum chann
 // Timing of the hit detector (all in microseconds)
 const unsigned long SCAN_US = 2500;       // after crossing threshold, look this long for the peak
 const unsigned long MASK_US = 30000;      // ignore the pad this long after a hit (ringing)
-const unsigned long DECAY_US = 80000;     // then the retrigger threshold decays over this long
+const unsigned long DECAY_US = 50000;     // then the retrigger threshold decays over this long
 const unsigned long NOTE_LEN_US = 60000;  // Note Off this long after Note On
 const unsigned long XTALK_US = 8000;      // crosstalk window between pads
 
-const float RETRIGGER_RATIO = 0.5;  // right after a hit, need this fraction of its peak to retrigger
+const float RETRIGGER_RATIO = 0.25;  // right after a hit, need this fraction of its peak to retrigger
+// RETRIGGER_RATIO and DECAY_US come from sim/tuning.py: lower values let the zener's
+// tail after a hard hit play a second note (docs/simulation.md).
 const float XTALK_RATIO = 0.4;      // drop a hit weaker than this fraction of a near-simultaneous hit on another pad
 const float VELOCITY_CURVE = 0.6;   // <1 = soft hits louder, 1 = linear, >1 = need to hit harder
 
