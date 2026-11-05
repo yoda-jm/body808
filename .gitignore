@@ -5,3 +5,14 @@ __pycache__/
 .vscode/c_cpp_properties.json
 # simulation cache (python3 sim/report.py)
 sim/out/report/
+# build photos from the tablet camera (full-size originals, ~2 MB each)
+photos/
+# KiCad scratch and local editor state for the shield
+hardware/shield/.work/
+*.kicad_prl
+# KiCad's own snapshots and lock files (File > Local History, backups, open-file locks)
+.history/
+*-backups/
+fp-info-cache
+~*.lck
+_autosave-*
