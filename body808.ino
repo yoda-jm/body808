@@ -33,7 +33,7 @@
 #define MIDI_MODE_USB_SERIAL (1 << 2)
 
 //#define MIDI_MODE (MIDI_MODE_DISPLAY | MIDI_MODE_SERIAL)
-#define MIDI_MODE MIDI_MODE_DISPLAY
+#define MIDI_MODE MIDI_MODE_USB_SERIAL
 
 #define CALIBRATE 0
 
@@ -97,11 +97,12 @@ struct Pad {
 // Same order and notes as PADS in tools/make_hydrogen_kit.py.
 Pad pads[] = {
   { "kick", A0, 36, 40, 600 },
-  { "snare", A1, 38, 40, 600 },
-  { "hihat", A2, 42, 40, 600 },
-  { "bass", A3, 35, 40, 600 },
-  { "clap", A4, 39, 40, 600 },
-  { "openhat", A5, 46, 40, 600 },
+  // TEMP bench test: only A0 is wired, the floating inputs would play ghost notes
+  // { "snare", A1, 38, 40, 600 },
+  // { "hihat", A2, 42, 40, 600 },
+  // { "bass", A3, 35, 40, 600 },
+  // { "clap", A4, 39, 40, 600 },
+  // { "openhat", A5, 46, 40, 600 },
 };
 const uint8_t PAD_COUNT = sizeof(pads) / sizeof(pads[0]);
 
