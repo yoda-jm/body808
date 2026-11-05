@@ -1,0 +1,4 @@
+(fp_lib_table
+	(version 7)
+	(lib (name "body808")(type "KiCad")(uri "${KIPRJMOD}/body808.pretty")(options "")(descr "body808 shield: datasheet footprints (written by build_shield.py)"))
+)
