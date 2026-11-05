@@ -10,6 +10,19 @@ the same side.
 
 ![3D view](images/shield-3d.png)
 
+## How it stacks
+
+Both boards stay the right way up: the shield sits on top of the Mega, and the pin
+headers under it plug into the Mega's sockets. The jacks and the MIDI socket are on the
+part that overhangs the Mega.
+
+![Side view of the shield on the Mega](images/shield-stacking.svg)
+
+The second drawing shows the alternative with stackable headers on top, which would let
+the factory solder everything in its cheaper one-sided service. In November 2026 JLCPCB
+had no stackable header in stock, so the board keeps the headers underneath.
+`stacking.py` draws this picture.
+
 ## Schematic
 
 ![Schematic](images/shield-schematic.png)
@@ -232,3 +245,4 @@ hardware/shield/make_fab.sh --no-build    # DRC, Gerbers, CPL, renders from the 
 | `fab/` | The JLCPCB upload: Gerber zip, BOM, placement (generated) |
 | `body808-shield-schematic.pdf`, `images/` | Schematic (PDF to print) and pictures for this page (generated) |
 | `annotate.py` | Adds the callouts to `images/shield-explained.png` |
+| `stacking.py` | Draws the side view `images/shield-stacking.svg` |
